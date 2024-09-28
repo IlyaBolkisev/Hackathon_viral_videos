@@ -4,7 +4,7 @@ nltk.download('punkt')
 nltk.download('punkt_tab')
 
 def extract_key_sentences(transcript_segments): # HuggingFace pipeline
-    summarizer = pipeline('summarization', device='cuda', model='IlyaGusev/rut5_base_headline_gen_telegram')
+    summarizer = pipeline('summarization', device='cuda', model='../rut5_base_headline_gen_telegram')
     tokenizer = summarizer.tokenizer
     all_sentences = []
     tokens_buffer_len = 0
