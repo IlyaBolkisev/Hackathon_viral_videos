@@ -1,4 +1,5 @@
 from modules.audio_processing import get_audio_features
+from modules.nlp_features import extract_key_sentences
 from modules.transcribation import get_audio_segments
 from modules.utils import extract_audio_from_video
 from modules.video_processing import get_video_features, extrapolate_bboxes, save_shorts
@@ -10,6 +11,7 @@ def get_videos(path_to_video, models):
 
     volume_peaks, pitch_changes, music_segments = get_audio_features(path_to_audio)
     extracted_segments = get_audio_segments(path_to_audio)
+    all_sentences = extract_key_sentences(extracted_segments)
 
     activity_frames, emotions_scores, bbox_list, fill_bbox, total_frames, original_fps = \
         get_video_features(path_to_video, models)

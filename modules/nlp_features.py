@@ -1,26 +1,19 @@
-from transformers import pipeline
 import nltk
+import numpy as np
+from sentence_transformers import SentenceTransformer
+
 nltk.download('punkt')
 nltk.download('punkt_tab')
 
-def extract_key_sentences(transcript_segments): # HuggingFace pipeline
-    summarizer = pipeline('summarization', device='cuda', model='../rut5_base_headline_gen_telegram')
-    tokenizer = summarizer.tokenizer
-    all_sentences = []
-    tokens_buffer_len = 0
-    text = ''
-    for segment in transcript_segments:
-        seg_length = len(tokenizer(segment.text).input_ids)
-        if tokens_buffer_len + seg_length >= summarizer.model.config.max_length:
-            summary = summarizer(text, do_sample=False)[0]['summary_text']
-            sents = nltk.sent_tokenize(text, language='russian')
-            key_sents = [sent for sent in sents if sent in summary]
-            all_sentences.extend(key_sents)
-            text = ''
-            tokens_buffer_len = 0
-        
-        text = text + segment.text
-        tokens_buffer_len += seg_length
 
-    return all_sentences
+def extract_key_sentences(transcript_segments):  # SentenceTransformer variant
+    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')  # 'all-MiniLM-L6-v2'
+    sentences = [seg.text.strip() for seg in transcript_segments]
+    embeddings = model.encode(sentences)
+    mean_emb = np.mean(embeddings, axis=0)
+    dists = [np.linalg.norm(emb - mean_emb) for emb in embeddings]
+    dist_mean = np.mean(dists)
+    dist_std = np.std(dists) * 0.2
+    dist_deviations = [d - dist_mean for d in dists]
 
+    return [sent.text.strip() for i, sent in enumerate(transcript_segments) if np.abs(dist_deviations[i]) < dist_std]

@@ -4,7 +4,7 @@ import numpy as np
 from modules.utils import preprocess_yolo, run_inference, preprocess_face, yolo2xyxy, calculate_iou
 
 
-def get_video_features(input_video_path, models, target_fps=10, activity_thresh=0.3):
+def get_video_features(input_video_path, models, target_fps=10, activity_thresh=0.7):
     cap = cv2.VideoCapture(input_video_path)
 
     original_fps = cap.get(cv2.CAP_PROP_FPS)
@@ -33,6 +33,7 @@ def get_video_features(input_video_path, models, target_fps=10, activity_thresh=
                 non_zero_count = np.count_nonzero(diff)
                 if non_zero_count > diff.size * activity_thresh:
                     activity_frames.append(frame_number)
+                prev_frame = cur_frame
             else:
                 prev_frame = cv2.cvtColor(frame_raw, cv2.COLOR_BGR2GRAY)
 
@@ -41,18 +42,15 @@ def get_video_features(input_video_path, models, target_fps=10, activity_thresh=
             xyxy, confidences = yolo2xyxy(outputs, [scale])
 
             if xyxy[0].shape[0] != 0:
-                faces = [frame_raw[y1:y2, x1:x2] for x1, y1, x2, y2 in xyxy[0]]
-                if len(faces) != 0:
-                    faces = np.stack([preprocess_face(face) for face in faces])
-                    outputs = run_inference(models['facial_expression'], faces)[0]
-                    emotions_score = outputs
-                else:
-                    emotions_score = np.array([])
-                emotions_scores.append(emotions_score)
-
                 bbox_sizes = [(x2 - x1) * (y2 - y1) for x1, y1, x2, y2 in xyxy[0]]
                 largest_bbox_index = np.argmax(bbox_sizes)
+
                 x1, y1, x2, y2 = xyxy[0][largest_bbox_index]
+                faces = [frame_raw[y1:y2, x1:x2]]
+                faces = np.stack([preprocess_face(face) for face in faces])
+                outputs = run_inference(models['facial_expression'], faces)[0]
+                emotions_scores.append((frame_number, outputs))
+
                 curr_bbox = [x1, y1, x2, y2]
                 if prev_bbox is None:
                     fill_bbox = curr_bbox
