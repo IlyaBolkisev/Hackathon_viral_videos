@@ -66,7 +66,7 @@ def get_video_features(input_video_path, models, target_fps=10, activity_thresh=
 
     cap.release()
 
-    return activity_frames, emotions_scores, bbox_list, fill_bbox, total_frames
+    return activity_frames, emotions_scores, bbox_list, fill_bbox, total_frames, original_fps
 
 
 def extrapolate_bboxes(bbox_list, total_frames, fill_bbox):

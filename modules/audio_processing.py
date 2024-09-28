@@ -1,11 +1,5 @@
 import librosa
 import numpy as np
-from moviepy.editor import VideoFileClip
-
-
-def extract_audio_from_video(video_path, audio_output_path):
-    video_clip = VideoFileClip(video_path)
-    video_clip.audio.write_audiofile(audio_output_path)
 
 
 def load_audio_file(audio_path):
@@ -42,8 +36,7 @@ def detect_music_segments(y, sr, hop_length=512, o_env_threshold=0.50):
     return times
 
 
-def get_audio_features(path_to_file='./tmp/video.mp4', audio_path='./tmp/audio.mp3'):
-    extract_audio_from_video(path_to_file, audio_path)
+def get_audio_features(audio_path):
     y, sr = load_audio_file(audio_path)
 
     volume_peaks = detect_volume_peaks(y, sr)

@@ -1,13 +1,16 @@
 import os
 
-import np
 import cv2
+import numpy as np
 import onnxruntime as rt
+from moviepy.editor import VideoFileClip
 
 
 def warmup_models(path_to_folder):
     models = {}
     for fn in os.listdir(path_to_folder):
+        if '.onnx' not in fn:
+            continue
         name = fn.split('.')[0]
         models[name] = rt.InferenceSession(f"{path_to_folder}/{fn}", providers=['CUDAExecutionProvider'])
         input_dict = {inp.name: np.random.rand(1, *inp.shape[1:]).astype('float32')
@@ -87,3 +90,8 @@ def yolo2xyxy(outputs, scales):
         bboxes.append(np.array(detections)[ids])
         confidences.append(np.array(scores)[ids])
     return bboxes, confidences
+
+
+def extract_audio_from_video(video_path, audio_output_path):
+    video_clip = VideoFileClip(video_path)
+    video_clip.audio.write_audiofile(audio_output_path)

@@ -3,9 +3,15 @@ import base64
 
 from flask import Flask, request, render_template
 
+from modules.utils import warmup_models
+from modules.wrapper import get_videos
+
+models = warmup_models('./weights')
+
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'asdafa'
+
 
 @app.route('/', methods=['GET', 'POST'])
 def get_main():
@@ -23,7 +29,9 @@ def get_main():
         if not os.path.isdir('./tmp/'):
             os.mkdir('./tmp/')
 
-        file.save('./tmp/tmp_video.mp4')
+        file_path = './tmp/tmp_video.mp4'
+        file.save(file_path)
+        get_videos(file_path, models)
         with open('./tmp/tmp_video.mp4', 'rb') as f:
             video_data = f.read()
 
@@ -31,6 +39,7 @@ def get_main():
         video_str = base64_video.decode('utf-8')
 
         return render_template('report.html', vids=[video_str for _ in range(2)])
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
