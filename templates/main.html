@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Viral Clips Generation</title>
+{% endblock %}
+{% block content %}
+    <div class="container pt-5">
+        <div class="row justify-content-md-center">
+            <span class="text-center">Вставьте ниже видео</span>
+        </div>
+        <div class="row justify-content-md-center mt-3 w-50 me-auto ms-auto">
+            <div> 
+                <form class="row p-3 border border-success rounded" method="post" id="myForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="video-input" class="form-label">Загрузить видео:</label>
+                        <input class="form-control" type="file" id="video-input" name="video_file" multiple>
+                    </div>
+                    <div class="mb-3">
+                        <label for="audio-input" class="form-label">Загрузить аудио:</label>
+                        <input class="form-control" type="file" id="audio-input" name="audio_file" multiple>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="no-audio" name="noAudio">
+                        <label for="no-audio" class="form-check-label">Нет аудио</label>
+                    </div>
+                    <div>
+                        <!-- <input type="submit" id="submitBtn" class="btn btn-success"> -->
+                         <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById('myForm');
+        const videoFileInput = document.getElementById('video-input');
+        const audioFileInput = document.getElementById('audio-input');
+        const noAudioCheckbox = document.getElementById('no-audio');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function toggleAudioInput() {
+            if (noAudioCheckbox.checked) {
+            audioFileInput.disabled = true;
+            } else {
+            audioFileInput.disabled = false;
+            }
+        }
+
+        function checkForm() {
+            const videoFile = videoFileInput.files[0];
+            const audioFile = audioFileInput.files[0];
+            const noAudio = noAudioCheckbox.checked;
+
+            if (videoFile && (audioFile || noAudio)) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        videoFileInput.addEventListener('change', checkForm);
+        audioFileInput.addEventListener('change', checkForm);
+        noAudioCheckbox.addEventListener('change', checkForm);
+        noAudioCheckbox.addEventListener('change', toggleAudioInput);
+    </script>
+{% endblock %}
