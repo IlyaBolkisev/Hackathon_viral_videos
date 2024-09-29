@@ -7,7 +7,7 @@ from modules.transcribation import get_audio_segments
 from modules.utils import extract_audio_from_video, process_activity_scores, process_audio_scores, \
     process_emotions_scores
 from modules.video_processing import get_video_features, extrapolate_bboxes, save_shorts
-
+from modules.emotes_expression import choose_emoji
 
 def get_videos(path_to_video, models, music_path=None):
     path_to_audio = './tmp/audio.mp3'
@@ -20,6 +20,9 @@ def get_videos(path_to_video, models, music_path=None):
 
     activity_frames, emotions_scores, bbox_list, fill_bbox, total_frames, original_fps = \
         get_video_features(path_to_video, models)
+    
+    emoji_mapping = choose_emoji(emotions_scores)
+
 
     activity_scores = process_activity_scores(activity_frames, total_frames)
     music_score = process_audio_scores(music_segments, original_fps, total_frames)
@@ -46,7 +49,7 @@ def get_videos(path_to_video, models, music_path=None):
                                     })
 
     all_bboxes = extrapolate_bboxes(bbox_list, total_frames, fill_bbox)
-    save_shorts(path_to_video, './tmp/shorts1.mp4', all_bboxes, original_fps)
+    save_shorts(path_to_video, './tmp/shorts1.mp4', all_bboxes, original_fps, emoji_mapping)
 
     if os.path.exists('./tmp/music.mp3'):
         music_path = './tmp/music.mp3'
