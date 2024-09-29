@@ -16,6 +16,6 @@ main.py - веб-приложение, написанное на Flask;
 
 **Веса моделей:**
 
-Faster Whisper - 
+Faster Whisper - https://drive.google.com/drive/folders/1qUMSfRZZGXo31XX1OaX70eeU0Kzlwpk8?usp=sharing скачать веса, поместить в папку models
 
-HuggingFace Summarizer (IlyaGusev/rut5_base_headline_gen_telegram) - https://huggingface.co/IlyaGusev/rut5_base_headline_gen_telegram
+Sentence Transformer - git clone https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L6-v2 в папку models
