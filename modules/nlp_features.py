@@ -7,7 +7,7 @@ nltk.download('punkt_tab')
 
 
 def extract_key_sentences(transcript_segments):  # SentenceTransformer variant
-    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')  # 'all-MiniLM-L6-v2'
+    model = SentenceTransformer('./models/paraphrase-MiniLM-L6-v2')  # 'all-MiniLM-L6-v2'
     sentences = [seg.text.strip() for seg in transcript_segments]
     embeddings = model.encode(sentences)
     mean_emb = np.mean(embeddings, axis=0)

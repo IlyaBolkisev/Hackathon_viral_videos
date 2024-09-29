@@ -6,8 +6,7 @@ from flask import Flask, request, render_template
 from modules.utils import warmup_models
 from modules.wrapper import get_videos
 
-models = warmup_models('./weights')
-
+models = warmup_models('./models')
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'asdafa'
@@ -33,7 +32,7 @@ def get_main():
         file.save(file_path)
 
         get_videos(file_path, models)
-        with open('./tmp/tmp_video.mp4', 'rb') as f:
+        with open('./tmp/shorts1.mp4', 'rb') as f:
             video_data = f.read()
 
         if os.path.exists(music_path):

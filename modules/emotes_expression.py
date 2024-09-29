@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image
 
+
 def choose_emoji(emotion_scores):
     labels = ["angry", "disgust", "fear", "happy", "sad", "surprise", "neutral"]
     emoji_mapping = {}
@@ -11,8 +12,10 @@ def choose_emoji(emotion_scores):
     
     return emoji_mapping
 
+
 def draw_emoji(x, y, frame, em_type):
     background = Image.fromarray(frame)
+
     emoji_im = Image.open(f'../emotes/{em_type}.png').resize((70, 70))
     emoji_im = emoji_im.convert('RGBA')
     

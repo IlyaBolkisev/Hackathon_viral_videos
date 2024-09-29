@@ -4,12 +4,14 @@ import numpy as np
 from modules.utils import preprocess_yolo, run_inference, preprocess_face, yolo2xyxy, calculate_iou
 from modules.emotes_expression import draw_emoji
 
+
 def get_video_features(input_video_path, models, target_fps=10, activity_thresh=0.7):
     cap = cv2.VideoCapture(input_video_path)
 
     original_fps = cap.get(cv2.CAP_PROP_FPS)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_skip = int(original_fps / target_fps) if target_fps < original_fps else 1
+    video_duration = total_frames / original_fps
 
     # features
     activity_frames = []
@@ -66,7 +68,7 @@ def get_video_features(input_video_path, models, target_fps=10, activity_thresh=
 
     cap.release()
 
-    return activity_frames, emotions_scores, bbox_list, fill_bbox, total_frames, original_fps
+    return activity_frames, emotions_scores, bbox_list, fill_bbox, total_frames, original_fps, video_duration
 
 
 def extrapolate_bboxes(bbox_list, total_frames, fill_bbox):

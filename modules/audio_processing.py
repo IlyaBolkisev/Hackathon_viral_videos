@@ -1,5 +1,6 @@
 import librosa
 import numpy as np
+import soundfile as sf
 
 
 def load_audio_file(audio_path):
@@ -46,4 +47,15 @@ def get_audio_features(audio_path):
     return volume_peaks, pitch_changes, music_segments
 
 
-# def process_music(music_path, video_duration):
+def process_music(audio_path, music_path):
+    audio, sr = librosa.load(audio_path, sr=None)
+    audio1, sr1 = librosa.load(music_path, sr=sr)
+    repeat_times = int(np.ceil(len(audio) / len(audio1)))
+    audio1_repeated = np.tile(audio1, repeat_times)
+    audio1_repeated = audio1_repeated[:len(audio)]
+    combined_audio = audio + audio1_repeated
+    combined_audio = combined_audio / np.max(np.abs(combined_audio))
+    combined_path = './tmp/combined_audio.wav'
+    sf.write(combined_path, combined_audio, sr)
+
+    return combined_path

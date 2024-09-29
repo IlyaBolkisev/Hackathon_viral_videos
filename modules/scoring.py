@@ -36,11 +36,13 @@ def update_scores(segments, feature_arr, feature_type):
             if segment.start_frame <= frame <= segment.end_frame:
                 segment.features[feature_type] += 1
 
+
 def rank_segments(segments, weights):
     for segment in segments:
         segment.compute_total_score(weights)
     return segments
 
+<<<<<<< HEAD
 def build_clips(extracted_segments):
     def check_segment(idx):
         if 0 <= idx < len(extracted_segments) and ind not in used_segments:
@@ -103,3 +105,5 @@ def build_clips(extracted_segments):
 #         else:
 #             neighbor_sum = normalized_scores[ind] + normalized_scores[ind-1] + normalized_scores[ind+1]
         
+=======
+>>>>>>> 3e11d77b7a22d889095f8e824184de6620043df4
