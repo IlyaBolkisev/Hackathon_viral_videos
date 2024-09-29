@@ -17,4 +17,4 @@ def draw_emoji(x, y, frame, em_type):
 
     background.paste(emoji_im, (x, y))
 
-    return background
+    return np.array(background)
