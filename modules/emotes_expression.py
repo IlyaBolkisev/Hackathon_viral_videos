@@ -15,6 +15,6 @@ def draw_emoji(x, y, frame, em_type):
     background = Image.fromarray(frame)
     emoji_im = Image.open(f'../emotes/{em_type}.png').resize((70, 70))
 
-    background.paste(emoji_im, (x, y))
+    background.paste(emoji_im, (x, y), mask=emoji_im)
 
     return np.array(background)

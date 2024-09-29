@@ -111,7 +111,7 @@ def save_shorts(input_video_path, output_video_path, all_bboxes, original_fps, e
     frame_number = 0
 
     emoji_counter = 0
-    anim_dur = int(1.5*original_fps)
+    anim_dur = int(3*original_fps)
     curr_emoji = ''
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -157,10 +157,10 @@ def save_shorts(input_video_path, output_video_path, all_bboxes, original_fps, e
             emoji_counter = 0
             curr_emoji = emoji_mapping[frame_number]
             emoji_y = int((0.5 - 0.1*(emoji_counter / anim_dur))*resized_frame.shape[0])
-            resized_frame = draw_emoji(int(0.9*resized_frame.shape[1]), emoji_y, resized_frame, curr_emoji)
+            resized_frame = draw_emoji(int(0.8*resized_frame.shape[1]), emoji_y, resized_frame, curr_emoji)
         if emoji_counter < anim_dur:
             emoji_counter += 1
-            
+
         out.write(resized_frame)
         frame_number += 1
 
