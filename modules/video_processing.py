@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 from modules.utils import preprocess_yolo, run_inference, preprocess_face, yolo2xyxy, calculate_iou
-
+from modules.emotes_expression import draw_emoji
 
 def get_video_features(input_video_path, models, target_fps=10, activity_thresh=0.7):
     cap = cv2.VideoCapture(input_video_path)
@@ -104,9 +104,13 @@ def extrapolate_bboxes(bbox_list, total_frames, fill_bbox):
     return all_bboxes
 
 
-def save_shorts(input_video_path, output_video_path, all_bboxes, original_fps, output_width=720, output_height=1280):
+def save_shorts(input_video_path, output_video_path, all_bboxes, original_fps, emoji_mapping, output_width=720, output_height=1280):
     cap = cv2.VideoCapture(input_video_path)
     frame_number = 0
+
+    emoji_counter = 0
+    anim_dur = int(1.5*original_fps)
+    curr_emoji = ''
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(output_video_path, fourcc, original_fps, (output_width, output_height))
@@ -147,6 +151,11 @@ def save_shorts(input_video_path, output_video_path, all_bboxes, original_fps, o
         else:
             resized_frame = cv2.resize(frame_raw, (output_width, output_height))
 
+        if frame_number in emoji_mapping:
+            emoji_counter = 0
+            curr_emoji = emoji_mapping[frame_number]
+            emoji_y = int((0.5 - 0.1*(emoji_counter / anim_dur))*resized_frame.shape[0])
+            draw_emoji(int(0.9*resized_frame.shape[1]), emoji_y, resized_frame, curr_emoji)
         out.write(resized_frame)
         frame_number += 1
 
