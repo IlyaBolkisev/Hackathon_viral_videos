@@ -6,8 +6,7 @@ from flask import Flask, request, render_template
 from modules.utils import warmup_models
 from modules.wrapper import get_videos
 
-models = warmup_models('./weights')
-
+models = warmup_models('./models')
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'asdafa'
