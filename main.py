@@ -32,7 +32,7 @@ def get_main():
         file.save(file_path)
 
         get_videos(file_path, models)
-        with open('./tmp/tmp_video.mp4', 'rb') as f:
+        with open('./tmp/shorts1.mp4', 'rb') as f:
             video_data = f.read()
 
         if os.path.exists(music_path):

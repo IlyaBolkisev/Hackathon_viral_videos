@@ -36,7 +36,9 @@ def update_scores(segments, feature_arr, feature_type):
             if segment.start_frame <= frame <= segment.end_frame:
                 segment.features[feature_type] += 1
 
+
 def rank_segments(segments, weights):
     for segment in segments:
         segment.compute_total_score(weights)
     return segments
+
