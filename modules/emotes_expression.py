@@ -14,7 +14,8 @@ def choose_emoji(emotion_scores):
 def draw_emoji(x, y, frame, em_type):
     background = Image.fromarray(frame)
     emoji_im = Image.open(f'../emotes/{em_type}.png').resize((70, 70))
-
+    emoji_im = emoji_im.convert('RGBA')
+    
     background.paste(emoji_im, (x, y), mask=emoji_im)
 
     return np.array(background)
