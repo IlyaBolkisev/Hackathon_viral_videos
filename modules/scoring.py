@@ -31,9 +31,8 @@ def update_nlp_scores(segments, nlp_key_moments):
 
 def update_scores(segments, feature_arr, feature_type):
     scored_frames = np.where(feature_arr > 0)
-    for frame in scored_frames:
+    for frame in scored_frames[0]:
         for segment in segments:
-            print(segment.start_frame, frame, segment.end_frame)
             if segment.start_frame <= frame <= segment.end_frame:
                 segment.features[feature_type] += 1
 
@@ -41,5 +40,4 @@ def update_scores(segments, feature_arr, feature_type):
 def rank_segments(segments, weights):
     for segment in segments:
         segment.compute_total_score(weights)
-    ranked_segments = sorted(segments, lambda x: x.total_score, reverse=True)
-    return ranked_segments
+    return segments

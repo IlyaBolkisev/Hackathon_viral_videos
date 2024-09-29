@@ -35,7 +35,7 @@ def get_videos(path_to_video, models, music_path=None):
     update_scores(video_segments, volume_score, 'volume_score')
     update_scores(video_segments, emotions_scores, 'emotion_score')
 
-    ranked_segments = rank_segments(video_segments,
+    segments = rank_segments(video_segments,
                                     {
                                         'nlp_score': 1.5,
                                         'music_score': 0.25,
