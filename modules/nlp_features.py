@@ -17,3 +17,15 @@ def extract_key_sentences(transcript_segments):  # SentenceTransformer variant
     dist_deviations = [d - dist_mean for d in dists]
 
     return [sent.text.strip() for i, sent in enumerate(transcript_segments) if np.abs(dist_deviations[i]) < dist_std]
+
+
+def get_key_moments(transcript_segments, key_sentences):
+    key_moments = []
+    for sentence in key_sentences:
+        for segment in transcript_segments:
+            if sentence.strip() in segment.text.strip():
+                start = segment.start
+                end = segment.end
+                key_moments.append({'sentence': sentence, 'start': start, 'end': end})
+                break
+    return key_moments

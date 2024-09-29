@@ -32,7 +32,9 @@ def get_video_features(input_video_path, models, target_fps=10, activity_thresh=
                 diff = (cv2.absdiff(cur_frame, prev_frame)).astype(int)
                 non_zero_count = np.count_nonzero(diff)
                 if non_zero_count > diff.size * activity_thresh:
-                    activity_frames.append(frame_number)
+                    for i in range(frame_skip):
+                        if frame_number+i < total_frames:
+                            activity_frames.append(frame_number+i)
                 prev_frame = cur_frame
             else:
                 prev_frame = cv2.cvtColor(frame_raw, cv2.COLOR_BGR2GRAY)

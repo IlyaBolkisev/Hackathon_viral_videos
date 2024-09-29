@@ -44,3 +44,6 @@ def get_audio_features(audio_path):
     music_segments = detect_music_segments(y, sr)
 
     return volume_peaks, pitch_changes, music_segments
+
+
+# def process_music(music_path, video_duration):
