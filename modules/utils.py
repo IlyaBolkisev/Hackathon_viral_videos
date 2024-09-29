@@ -93,5 +93,31 @@ def yolo2xyxy(outputs, scales):
 
 
 def extract_audio_from_video(video_path, audio_output_path):
-    video_clip = VideoFileClip(video_path)
-    video_clip.audio.write_audiofile(audio_output_path)
+    video_clip = VideoFileClip(video_path, verbose=False)
+    video_clip.audio.write_audiofile(audio_output_path, verbose=False, logger=None)
+
+
+def process_activity_scores(activity_frames, total_frames):
+    result = np.zeros(total_frames)
+    result[activity_frames] = 1
+    return result
+
+
+def process_audio_scores(score, original_fps, total_frames):
+    fps = int(original_fps)
+    result = np.zeros(total_frames)
+    score = (np.array(score) * fps).astype(int)
+    score = [e - fps//2 + i for e in score for i in range(fps) if e - fps//2 + i < total_frames]
+    result[score] = 1
+    return result
+
+
+def process_emotions_scores(emotions_scores, total_frames):
+    result = np.zeros(total_frames)
+    emotions_id = np.full(total_frames, -1)
+    for idx, vec in emotions_scores:
+        label = vec.argmax()
+        if label != 6 and vec[0][label] > 0.9:
+            result[idx] = 1
+            emotions_id[idx] = label
+    return result, emotions_id
